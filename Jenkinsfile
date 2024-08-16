@@ -31,27 +31,21 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                withCredentials([file(credentialsId: 'kubeconfig-credential-id', variable: 'KUBECONFIG')]) {
-                    sh 'kubectl apply -f k8s/deployment.yaml'
-                    sh 'kubectl apply -f k8s/service.yaml'
-                }
-            }
-        }
-
         stage("SSH Into k8s Server") {
             steps {
-                def remote = [:]
-                remote.name = 'K8S master'
-                remote.host = '192.168.64.9'
-                remote.user = 'ubuntu'
-                remote.password = 'welcome1'
-                remote.allowAnyHosts = true
-                sshPut remote: remote, from: 'k8s/deployment.yaml', into: '.'
-                sshCommand remote: remote, command: "kubectl apply -f deployment.yaml"
-                sshPut remote: remote, from: 'k8s/service.yaml', into: '.'
-                sshCommand remote: remote, command: "kubectl apply -f service.yaml"
+                script {
+                    def remote = [:]
+                    remote.name = 'K8S master'
+                    remote.host = '192.168.64.9'
+                    remote.user = 'ubuntu'
+                    remote.password = 'welcome1'
+                    remote.allowAnyHosts = true
+
+                    sshPut remote: remote, from: 'k8s/deployment.yaml', into: '.'
+                    sshCommand remote: remote, command: "kubectl apply -f deployment.yaml"
+                    sshPut remote: remote, from: 'k8s/service.yaml', into: '.'
+                    sshCommand remote: remote, command: "kubectl apply -f service.yaml"
+                }
             }
         }
     }
