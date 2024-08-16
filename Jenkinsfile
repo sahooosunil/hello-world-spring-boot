@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = "sunilsahu0123/hello-world-spring-boot:latest"
-        DOCKER_CREDENTIALS = credentials('docker-hub-credential-id')
+        DOCKER_CREDENTIALS = credentials('docker-credential-id')
     }
     stages {
         stage('Checkout Code') {
