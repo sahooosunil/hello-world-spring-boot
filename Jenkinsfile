@@ -26,10 +26,8 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD', variable: 'PASSWORD')]) {
                     sh 'docker login -u sunilsahu0123@gmail.com -p $PASSWORD'
+                    sh 'docker push  sunilsahu0123/hello-world-spring-boot:latest'
                 }
-            }
-            steps {
-                sh 'docker push  sunilsahu0123/hello-world-spring-boot:latest'
             }
         }
 
