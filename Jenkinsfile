@@ -15,16 +15,20 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('Docker Build & Push') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS) {
-                        def app = docker.build(DOCKER_IMAGE)
-                        app.push()
-                    }
-                }
-            }
+        stage("Docker build"){
+            sh 'docker version'
+            sh 'docker build -t sunilsahu0123/hello-world-spring-boot:latest .'
+            sh 'docker image list'
         }
+        stage("Docker Login"){
+                withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD', variable: 'PASSWORD')]) {
+                    sh 'docker login -u sunilsahu0123@gmail.com -p $PASSWORD'
+                }
+        }
+        stage("Push Image to Docker Hub"){
+            sh 'docker push  sunilsahu0123/hello-world-spring-boot:latest'
+        }
+        
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig-credential-id', variable: 'KUBECONFIG')]) {
