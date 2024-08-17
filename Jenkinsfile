@@ -38,10 +38,10 @@ pipeline {
                     remote.user = 'ubuntu'
                     remote.allowAnyHosts = true
                     remote.identityFile = '/var/lib/jenkins/.ssh/id_rsa' 
-
-                    // Use the SSH key with ID 'jenkins-ssh-key-id'
-                    
+                    // Upload the deployment.yaml file
                     sshPut remote: remote, from: 'k8s/deployment.yaml', into: '.'
+                    // Replace placeholder with actual Docker image tag
+                    sshCommand remote: remote, command: "sed -i 's|sunilsahu0123/hello-world-spring-boot:.*|${DOCKER_IMAGE}|g' deployment.yaml"
                     sshCommand remote: remote, command: "kubectl apply -f deployment.yaml"
                     sshPut remote: remote, from: 'k8s/service.yaml', into: '.'
                     sshCommand remote: remote, command: "kubectl apply -f service.yaml"
