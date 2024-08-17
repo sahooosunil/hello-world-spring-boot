@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = "sunilsahu0123/hello-world-spring-boot:latest"
-        DOCKER_CREDENTIALS = credentials('docker-credential-id')
     }
     stages {
         stage('Checkout Code') {
@@ -35,10 +34,10 @@ pipeline {
                 script {
                     def remote = [:]
                     remote.name = 'K8S master'
-                    remote.host = '192.168.64.9'
+                    remote.host = '192.168.64.13'
                     remote.user = 'ubuntu'
                     remote.allowAnyHosts = true
-                    remote.identityFile = '/var/lib/jenkins/.ssh/id_rsa2' 
+                    remote.identityFile = '/var/lib/jenkins/.ssh/id_rsa' 
 
                     // Use the SSH key with ID 'jenkins-ssh-key-id'
                     
