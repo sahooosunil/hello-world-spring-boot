@@ -29,7 +29,7 @@ pipeline {
                 }
             }
         }
-        stage('SSH into Server') {
+        stage('SSH into Kmaster n Deploy to K8s cluster') {
             steps {
                 script {
                     def remote = [:]
