@@ -15,5 +15,6 @@ spec:
       containers:
       - name: helloworld
         image: sunilsahu0123/hello-world-spring-boot:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
