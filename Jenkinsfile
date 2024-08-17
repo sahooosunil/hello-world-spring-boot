@@ -30,7 +30,6 @@ pipeline {
                 }
             }
         }
-
         stage('SSH into Server') {
             steps {
                 script {
@@ -39,14 +38,15 @@ pipeline {
                     remote.host = '192.168.64.9'
                     remote.user = 'ubuntu'
                     remote.allowAnyHosts = true
+                    remote.identityFile = '/var/lib/jenkins/.ssh/id_rsa2' 
 
                     // Use the SSH key with ID 'jenkins-ssh-key-id'
-                    sshagent(['jenkins-ssh-key-id']) {
-                        sshPut remote: remote, from: 'k8s/deployment.yaml', into: '.'
-                        sshCommand remote: remote, command: "kubectl apply -f deployment.yaml"
-                        sshPut remote: remote, from: 'k8s/service.yaml', into: '.'
-                        sshCommand remote: remote, command: "kubectl apply -f service.yaml"
-                    }
+                    
+                    sshPut remote: remote, from: 'k8s/deployment.yaml', into: '.'
+                    sshCommand remote: remote, command: "kubectl apply -f deployment.yaml"
+                    sshPut remote: remote, from: 'k8s/service.yaml', into: '.'
+                    sshCommand remote: remote, command: "kubectl apply -f service.yaml"
+                    
                 }
             }
         }
