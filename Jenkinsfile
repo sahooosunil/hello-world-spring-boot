@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "sunilsahu0123/hello-world-spring-boot:latest"
+        DOCKER_IMAGE = "sunilsahu0123/hello-world-spring-boot:${env.BUILD_NUMBER}"
     }
     stages {
         stage('Checkout Code') {
@@ -17,7 +17,7 @@ pipeline {
         stage("Docker build"){
             steps {
                 sh 'docker version'
-                sh 'docker build -t sunilsahu0123/hello-world-spring-boot:latest .'
+                sh "docker build -t ${DOCKER_IMAGE} ."
                 sh 'docker image list'
             }
         }
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD', variable: 'PASSWORD')]) {
                     sh 'docker login -u sunilsahu0123@gmail.com -p $PASSWORD'
-                    sh 'docker push  sunilsahu0123/hello-world-spring-boot:latest'
+                    sh "docker push ${DOCKER_IMAGE}"
                 }
             }
         }
